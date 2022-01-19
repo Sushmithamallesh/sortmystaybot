@@ -1,1 +1,1 @@
-# Sort My Place Twitter bot
+# Sort My Stay Twitter bot
