@@ -14,8 +14,29 @@ function reTweet(searchText){
     if (!err_search){
       let tweetIDList = []
       for(let tweet of tweets) {
-        tweetIDList.push(tweet.id_str)
+        if (tweet.text.startsWith("RT @")){
+          if(tweet.retweeted_status){
+            tweetIDList.push(tweet.retweeted_status.id_str)
+          }
+          else{
+            tweetIDList.push(tweet.id_str)
+          }
+        }
+        else if(tweet.in_reply_to_status_id_str != null){
+            tweetIDList.push(tweet.in_reply_to_status_id_str)
+
+        }
+        else{
+          tweetIDList.push(tweet.id_str)
+        }
       }
+
+      function onlyUnique(value, index, self) { 
+        return self.indexOf(value) === index;
+      }
+    
+      // Get only unique entries
+      tweetIDList = tweetIDList.filter( onlyUnique )
 
       for (let tweetID of tweetIDList){
         T.post('statuses/retweet/:id', {id: tweetID}, function(err_rt, data_rt, response_rt){
